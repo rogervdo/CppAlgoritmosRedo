@@ -144,10 +144,40 @@ void mergeSort(std::vector<int>& nums) {
     mergeSort(nums, left, right);
 }
 
-// int quickSort(std::vector<int> nums) {
-//     int n = nums.size();
+int partition(std::vector<int>& nums, int high, int low) {
 
-// }
+    int pivot = nums[high]; // Pivote es el ultimo elemento
+    int i = low - 1; // i empieza debajo de low (-1)
+
+    for (int j = low; j < high; j++) { // j son todos los elementos, i solo los menores al pivote, por lo que podemos separar en dos conjuntos.
+        if (nums[j] < pivot) {
+            i++;
+            std::swap(nums[j], nums[i]); // Cambiamos al lado de los nums menores.
+        }
+    }
+    std::swap(nums[i + 1], nums[high]); // Cambiamos el pivote al lugar donde separa los números.
+    return i + 1; // Retornamos el pivote.
+}
+
+void quickSort(std::vector<int>& nums, int high, int low) {
+
+    if (low < high) { // Continues while partitions are more than one element long
+
+        int partitionIndex = partition(nums, high, low); // Primera partición
+
+        quickSort(nums, partitionIndex - 1, low); // Recursion a la izq
+        quickSort(nums, high, partitionIndex + 1); // Recursion a la derecha
+    }
+
+}
+
+void quickSort(std::vector<int>& nums) {
+    int n = nums.size();
+    int low = 0;
+    int high = n - 1;
+
+    quickSort(nums, high, low);
+}
 
 void printVector(const std::vector<int>& vec) {
     for (int val : vec) {
@@ -181,8 +211,9 @@ int main() {
     printVector(numbers4);
 
     std::cout << "Quicksort\n";
-    //quickSort(numbers5);
+    quickSort(numbers5);
     printVector(numbers5);
+
 
     std::vector<int> nums = {5, 13, 6, 11, 12, 7};
 
