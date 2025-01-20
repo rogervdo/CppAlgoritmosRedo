@@ -144,10 +144,10 @@ void mergeSort(std::vector<int>& nums) {
     mergeSort(nums, left, right);
 }
 
-int quickSort(std::vector<int> nums) {
-    int n = nums.size();
+// int quickSort(std::vector<int> nums) {
+//     int n = nums.size();
 
-}
+// }
 
 void printVector(const std::vector<int>& vec) {
     for (int val : vec) {
