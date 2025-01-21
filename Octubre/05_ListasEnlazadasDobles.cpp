@@ -3,10 +3,10 @@
 
 struct Node {
     int data; // Datos del nodo
-    Node* next; // Pointer al nodo siguiente
+    Node* next; // Pointer al nodo siguiente y previo
     Node* prev;
 
-    Node(int value) { // Constructor
+    Node(int value) { // Constructor basico
         data = value;
         next = prev = nullptr;
     }
@@ -18,7 +18,7 @@ class List {
     int size;
 
 public:
-    List() {
+    List() { // Constructor basico
         first = last = nullptr;
         size = 0;
     }
@@ -39,7 +39,7 @@ public:
     Node* find(int value, int* indexPointer);
 };
 
-void List::showList() {
+void List::showList() { // Recorre la lista desde first
     int i = 0;
     std::cout << "List size = " << getSize() << "\n";
 
@@ -53,7 +53,7 @@ void List::showList() {
     std::cout << "\n";
 }
 
-void List::showListReverse() {
+void List::showListReverse() { // Recorre la lista desde last;
     int i = 0;
     std::cout << "List size = " << getSize() << "\n";
 
@@ -85,7 +85,7 @@ bool List::insertFirst(int newValue) {
     }
 
 
-    first->prev = newNode;
+    first->prev = newNode; // Anterior primer nodo ahora apunta hacia atras al nuevo
     newNode->next = first; // Anterior primer nodo ahora es el que sigue del nuevo
     first = newNode; // Nuevo nodo ahora es el primero
 
@@ -109,7 +109,7 @@ bool List::insertLast(int newValue) {
         return false;
     }
 
-    last->next = newNode;
+    last->next = newNode; // Mismo procedimiento que en first pero inverso
     newNode->prev = last;
     last = newNode;
 
@@ -143,7 +143,7 @@ bool List::insertAtIndex(int newValue, int index) {
 
     Node* aux;
 
-    if (index < size / 2) {
+    if (index < size / 2) { // Decide si recorrer desde el inicio o el final
         aux = first;
         for (int i = 0; i < index - 1 && aux != nullptr; i++) {
             aux = aux->next;
@@ -158,7 +158,7 @@ bool List::insertAtIndex(int newValue, int index) {
     }
 
 
-    if (aux != nullptr) {
+    if (aux != nullptr) { // Modifica las conexiones de los dos nodos alrededor del nuevo.
         Node* temp = aux->next;
 
         newNode->next = temp;
@@ -181,13 +181,14 @@ bool List::deleteFirst() {
         std::cerr << "deleteAtIndex: lista vacia\n";
         return false;
     }
+
     Node* aux = first;
-    if (first->next != nullptr) {
+    if (first->next != nullptr) { // Check solo un elemento
         first = first->next;
         first->prev = nullptr;
     }
     else {
-        first = last = nullptr; // Lista vacia
+        first = last = nullptr; // Lista vacia ahora
     }
 
     delete aux;
@@ -209,7 +210,7 @@ bool List::deleteLast() {
     }
 
     Node* aux = last;
-    if (last->prev != nullptr) {
+    if (last->prev != nullptr) { // Check solo un elemento
         last = last->prev;
         last->next = nullptr;
     }
@@ -262,7 +263,7 @@ bool List::deleteAtIndex(int index) {
         Node* del = aux->next;
         Node* temp = del->next;
 
-        aux->next = temp;
+        aux->next = temp; // hacemos "puentes" sobre el nodo a borrar y borramos el nodo.
         temp->prev = aux;
 
         delete del;
@@ -276,7 +277,8 @@ bool List::deleteAtIndex(int index) {
     return false;
 }
 
-Node* List::find(int value, int* indexPointer) {
+Node* List::find(int value, int* indexPointer) { // regresa un valor y asigna memoria a indexPointer
+
     Node* aux = first;
 
     int i = 0;
