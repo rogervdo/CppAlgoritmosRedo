@@ -5,6 +5,11 @@ struct dNode {
     int data;
     dNode* next;
     dNode* prev;
+
+    dNode(int value) {
+        data = value;
+        next = prev = nullptr;
+    }
 };
 
 struct sNode {
@@ -83,6 +88,83 @@ void Stack::show() {
     }
 }
 
+class Queue {
+private:
+    dNode* front;
+    dNode* end;
+    int size;
+
+public:
+    Queue() {
+        front = nullptr;
+        end = nullptr;
+        size = 0;
+    }
+
+    ~Queue() {
+        while (!isEmpty()) {
+            dequeue();
+        }
+    }
+
+    bool enqueue(int newValue);
+    int dequeue();
+    int getFront();
+    bool isEmpty() { return front == nullptr; };
+    int getSize() { return size; };
+    void show();
+};
+
+bool Queue::enqueue(int newValue) { // queue front es prevmost, end es nextmost
+    dNode* newNode = new dNode(newValue);
+    newNode->prev = end; // anterior es el viejo end
+
+    if (isEmpty()) { front = newNode; } // Sin nodos previos
+    else { end->next = newNode; } // Un nodo o mas > end viejo apunta a nuevo end
+
+    end = newNode; // cambia pointer de end a newNode
+    size++;
+    return true;
+}
+
+int Queue::dequeue() {
+    if (isEmpty()) {
+        std::cout << "Cola vacia, no se puede quitar\n";
+        return -1;
+    }
+
+    int dequeueData = front->data;
+    dNode* temp = front; // valor que se borrará
+    front = front->next;
+
+    if (front != nullptr) { // front no tiene prev 
+        front->prev = nullptr;
+    }
+    else {
+        end = nullptr; // si si esta vacia entonces end = nullptr
+    }
+
+    delete temp; // liberar memoria
+    size--;
+    return dequeueData;
+}
+
+int Queue::getFront() {
+    if (isEmpty()) {
+        std::cout << "No existe frente, la cola esta vacia\n";
+        return -1;
+    }
+    return front->data;
+}
+
+void Queue::show() {
+    dNode* n = front;
+    while (n != nullptr) {
+        std::cout << "Queue: " << n->data << "\n";
+        n = n->next;
+    }
+}
+
 int main() {
     std::cout << "Stack Section\n";
 
@@ -96,8 +178,24 @@ int main() {
 
     std::cout << "\nSize of Stack >> " << stack1->getSize();
     std::cout << "\nTop of Stack >> " << stack1->getTop();
-    std::cout << "\n\nOut: >> " << stack1->pop() << "\n";
+    std::cout << "\n\nOut: " << stack1->pop() << "\n";
 
     stack1->show();
     std::cout << "\nSize of Stack >> " << stack1->getSize() << std::endl;
+
+    std::cout << "Queue Section\n";
+    Queue* queue = new Queue();
+
+    queue->enqueue(6);
+    queue->enqueue(9);
+    queue->enqueue(8);
+    queue->enqueue(1);
+
+    queue->show();
+    std::cout << "\nSize of Queue >> " << queue->getSize();
+    std::cout << "\nFront of Queue >> " << queue->getFront();
+    std::cout << "\nOut: " << queue->dequeue();
+
+    std::cout << "\nQueue size: " << queue->getSize() << "\n";
+    queue->show();
 }
