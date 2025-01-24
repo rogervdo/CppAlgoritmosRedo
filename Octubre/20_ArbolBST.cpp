@@ -100,16 +100,16 @@ public:
     void showTree();
 
     // Recorridos
-    void preorder();
-    void inorder();
-    void postorder();
-    void levelorder();
+    void preOrder();
+    void inOrder();
+    void postOrder();
+    void levelOrder();
     void dfs();
 
 private:
-    void preorder(tNode* node);
-    void inorder(tNode* node);
-    void postorder(tNode* node);
+    void preOrder(tNode* node);
+    void inOrder(tNode* node);
+    void postOrder(tNode* node);
 };
 
 tNode* BST::search(int value) {
@@ -222,5 +222,105 @@ void BST::remove(int removeValue) {
         }
 
         delete temp;
+    }
+}
+
+void BST::preOrder() {
+    std::cout << "preOrder: ";
+    preOrder(root);
+}
+
+void BST::preOrder(tNode* node) {
+    if (node == nullptr) { return; }
+
+    std::cout << "\n" << node->data << "(P:";
+    // Imprime si existe el node padre, si no, imprime nullptr
+    if (node->up != nullptr) { std::cout << node->up->data; }
+    else { std::cout << "nullptr"; }
+    std::cout << ") ";
+
+    preOrder(node->left); // Llamadas recursivas
+    preOrder(node->right);
+}
+
+void BST::inOrder() {
+    std::cout << "inOrder: ";
+    inOrder(root);
+}
+
+void BST::inOrder(tNode* node) {
+    if (node == nullptr) { return; }
+
+    inOrder(node->left);
+
+    std::cout << "\n" << node->data << "(P:";
+
+    if (node->up != nullptr) { std::cout << node->up->data; }
+    else { std::cout << "nullptr"; }
+    std::cout << ") ";
+
+    inOrder(node->right);
+}
+
+void BST::postOrder() {
+    std::cout << "postOrder: ";
+    postOrder(root);
+}
+
+void BST::postOrder(tNode* node) {
+    if (node == nullptr) { return; }
+
+    postOrder(node->left);
+    postOrder(node->right);
+
+    std::cout << "\n" << node->data << "(P:";
+
+    if (node->up != nullptr) { std::cout << node->up->data; }
+    else { std::cout << "nullptr"; }
+    std::cout << ") ";
+}
+
+void BST::levelOrder() {
+    if (root == nullptr) { return; }
+
+    Queue q;
+    q.enqueue(root);
+
+    std::cout << "levelOrder: ";
+
+    while (!q.isEmpty()) {
+        tNode* current = q.dequeue();
+
+        std::cout << current->data << "(P:";
+        if (current->up != nullptr) { std::cout << current->up->data; }
+        else { std::cout << "nullptr"; }
+        std::cout << ") ";
+
+        if (current->left != nullptr) { q.enqueue(current->left); }
+        if (current->right != nullptr) { q.enqueue(current->right); }
+
+        std::cout << "\n";
+    }
+}
+
+void BST::dfs() {
+    if (root == nullptr) { return; }
+
+    Stack s;
+    s.push(root);
+
+    std::cout << "DFS: ";
+
+    while (!s.isEmpty()) {
+        tNode* current = s.getTop();
+        s.pop();
+
+        std::cout << current->data << "(P:";
+        if (current->up != nullptr) { std::cout << current->up->data; }
+        else { std::cout << "nullptr"; }
+        std::cout << ") ";
+
+        if (current->right != nullptr) { s.push(current->right); }
+        if (current->left != nullptr) { s.push(current->left); }
     }
 }
