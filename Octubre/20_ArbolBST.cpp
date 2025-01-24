@@ -66,7 +66,7 @@ private:
     Node* topNode;
 
 public:
-    Stack() { topNode == nullptr; }
+    Stack() { topNode = nullptr; }
     bool isEmpty() { return topNode == nullptr; }
     void push(tNode* treeNode) {
         Node* newNode = new Node(treeNode);
@@ -119,17 +119,17 @@ tNode* BST::search(int value) {
         if (aux->data < value) { aux = aux->right; }
         else if (aux->data > value) { aux = aux->left; }
         else {
-            std::cout << "Encontrado: " << aux->data << std::endl;
+            std::cout << "[search] Encontrado: " << aux->data << std::endl;
             return aux;
         }
     }
-    std::cout << "No encontrado: " << value << std::endl;
+    std::cout << "[search] No encontrado: " << value << std::endl;
     return nullptr;
 }
 
 void BST::insert(int newValue) {
     if (search(newValue) != nullptr) {
-        std::cout << "Ya existe el valor: " << newValue << "\n";
+        std::cout << "[insert] Ya existe el valor: " << newValue << "\n";
         return;
     }
 
@@ -142,14 +142,16 @@ void BST::insert(int newValue) {
             if (aux->left == nullptr) { // revisa si el nodo nuevo puede ser hijo izquierdo de aux;
                 aux->left = newNode; // EXITO >> Enlaza ambos nodos
                 newNode->up = aux;
+                std::cout << "[insert] Insertado: " << newValue << "\n";
                 return;
             }
             else { aux = aux->left; } // FRACASO >> pasamos al siguiente nivel y repetimos
         }
         else { // mismo proceso pero para la derecha
-            if (aux->right = nullptr) { // EXITO >> Enlaza ambos nodos
+            if (aux->right == nullptr) { // EXITO >> Enlaza ambos nodos
                 aux->right = newNode;
                 newNode->up = aux;
+                std::cout << "[insert] Insertado: " << newValue << "\n";
                 return;
             }
             else { aux = aux->right; } // FRACASO >> pasamos al siguiente nivel y repetimos
@@ -161,7 +163,7 @@ void BST::remove(int removeValue) {
 
     tNode* aux = search(removeValue);
     if (aux == nullptr) {
-        std::cout << "remove: No existe el valor " << removeValue << "\n";
+        std::cout << "[remove] No existe el valor " << removeValue << "\n";
         return;
     }
 
@@ -176,6 +178,7 @@ void BST::remove(int removeValue) {
         //checa si borramos del parent el pointer izq o rerecho
         if (aux->data > parent->data) { parent->right = nullptr; }
         else { parent->left = nullptr; }
+        std::cout << "[remove] Borrado: " << removeValue << "\n";
         delete aux;
     }
 
@@ -197,6 +200,7 @@ void BST::remove(int removeValue) {
             else { parent->right = aux->right; }
             aux->right->up = parent;
         }
+        std::cout << "[remove] Borrado: " << removeValue << "\n";
         delete aux;
     }
 
@@ -220,7 +224,7 @@ void BST::remove(int removeValue) {
             if (parent->left == temp) { parent->left = nullptr; }
             else { parent->right = nullptr; }
         }
-
+        std::cout << "[remove] Borrado: " << removeValue << "\n";
         delete temp;
     }
 }
@@ -228,12 +232,13 @@ void BST::remove(int removeValue) {
 void BST::preOrder() {
     std::cout << "preOrder: ";
     preOrder(root);
+    std::cout << "\n";
 }
 
 void BST::preOrder(tNode* node) {
     if (node == nullptr) { return; }
 
-    std::cout << "\n" << node->data << "(P:";
+    std::cout << node->data << "(P:";
     // Imprime si existe el node padre, si no, imprime nullptr
     if (node->up != nullptr) { std::cout << node->up->data; }
     else { std::cout << "nullptr"; }
@@ -246,6 +251,7 @@ void BST::preOrder(tNode* node) {
 void BST::inOrder() {
     std::cout << "inOrder: ";
     inOrder(root);
+    std::cout << "\n";
 }
 
 void BST::inOrder(tNode* node) {
@@ -253,7 +259,7 @@ void BST::inOrder(tNode* node) {
 
     inOrder(node->left);
 
-    std::cout << "\n" << node->data << "(P:";
+    std::cout << node->data << "(P:";
 
     if (node->up != nullptr) { std::cout << node->up->data; }
     else { std::cout << "nullptr"; }
@@ -265,6 +271,7 @@ void BST::inOrder(tNode* node) {
 void BST::postOrder() {
     std::cout << "postOrder: ";
     postOrder(root);
+    std::cout << "\n";
 }
 
 void BST::postOrder(tNode* node) {
@@ -273,7 +280,7 @@ void BST::postOrder(tNode* node) {
     postOrder(node->left);
     postOrder(node->right);
 
-    std::cout << "\n" << node->data << "(P:";
+    std::cout << node->data << "(P:";
 
     if (node->up != nullptr) { std::cout << node->up->data; }
     else { std::cout << "nullptr"; }
@@ -298,9 +305,8 @@ void BST::levelOrder() {
 
         if (current->left != nullptr) { q.enqueue(current->left); }
         if (current->right != nullptr) { q.enqueue(current->right); }
-
-        std::cout << "\n";
     }
+    std::cout << "\n";
 }
 
 void BST::dfs() {
@@ -323,4 +329,53 @@ void BST::dfs() {
         if (current->right != nullptr) { s.push(current->right); }
         if (current->left != nullptr) { s.push(current->left); }
     }
+    std::cout << "\n";
+}
+
+int main() {
+    BST* bst = new BST(25);
+
+    std::cout << "Busqueda\n";
+    tNode* aux = bst->search(25);
+    aux = bst->search(30);
+
+    std::cout << "\nInsertar\n";
+    bst->insert(20);
+    bst->insert(34);
+    bst->insert(2);
+    bst->insert(22);
+    bst->insert(30);
+    bst->insert(40);
+    bst->insert(26);
+    bst->insert(31);
+    bst->insert(32);
+    bst->insert(45);
+    bst->insert(39);
+    std::cout << "\n";
+
+    bst->preOrder();
+    std::cout << "\n";
+
+    bst->remove(34);
+    bst->preOrder();
+    std::cout << "\n";
+
+    bst->remove(32);
+    bst->preOrder();
+    std::cout << "\n";
+
+    bst->remove(39);
+    bst->preOrder();
+    std::cout << "\n";
+
+    bst->remove(40);
+    bst->preOrder();
+    std::cout << "\n";
+
+    std::cout << "Orders\n";
+    bst->preOrder();
+    bst->inOrder();
+    bst->postOrder();
+    bst->levelOrder();
+    bst->dfs();
 }
